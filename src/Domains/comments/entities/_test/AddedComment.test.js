@@ -11,6 +11,17 @@ describe('AddedComment entities', () => {
     // Action dan Assert
     expect(() => new AddedComment(payload)).toThrowError('ADDED_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
   })
+  it('should throw an error when payload not meet data type specification', () => {
+    // Arrange
+    const payload = { // missing 'content'
+      id: 555,
+      content: true,
+      owner: {},
+    }
+
+    // Action dan Assert
+    expect(() => new AddedComment(payload)).toThrowError('ADDED_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
+  })
   it('should create AddedComment object correctly', () => {
     // Arrange
     const payload = {
