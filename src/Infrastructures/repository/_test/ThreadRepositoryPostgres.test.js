@@ -23,7 +23,7 @@ describe('ThreadRepositoryPostgres', () => {
   describe('addThread function', () => {
     it('should create new thread and return added user correctly', async () => {
       // Arrange
-      await UsersTableTestHelper.addUser({}); // Buat User untuk autentikasi
+      await UsersTableTestHelper.addUser({}); 
 
       const createThread = new CreateThread({
         title: 'Judul Thread',
@@ -54,6 +54,31 @@ describe('ThreadRepositoryPostgres', () => {
           owner: userId,
         }),
       );
+    });
+  });
+  describe('checkExistingThread function', () => {
+    it('should throw NotFoundError when thread not found', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+
+      // Action and Assert
+      await expect(
+        threadRepositoryPostgres.checkExistingThread('thread-xxx'),
+      ).rejects.toThrowError(NotFoundError);
+    });
+
+    it('should resolve when thread is found', async () => {
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+
+      await expect(
+        threadRepositoryPostgres.checkExistingThread('thread-123'),
+      ).resolves.not.toThrowError();
     });
   });
 });
