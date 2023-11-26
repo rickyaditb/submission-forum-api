@@ -81,4 +81,38 @@ describe('ThreadRepositoryPostgres', () => {
       ).resolves.not.toThrowError();
     });
   });
+  describe('getThreadById function', () => {
+    it('should throw NotFoundError when thread not found', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+
+      // Action and Assert
+      await expect(
+        threadRepositoryPostgres.getThreadById('thread-xxx'),
+      ).rejects.toThrowError(NotFoundError);
+    });
+
+    it('should return detail thread correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+
+      // Action
+      const detailThread = await threadRepositoryPostgres.getThreadById(
+        'thread-123',
+      );
+
+      // Assert
+      const thread = await ThreadsTableTestHelper.findThreadById(
+        'thread-123',
+      );
+
+      expect(detailThread).toStrictEqual(thread);
+    });
+  });
 });
