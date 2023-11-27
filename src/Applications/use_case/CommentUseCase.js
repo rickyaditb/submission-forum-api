@@ -1,4 +1,4 @@
-const NewComment = require('../../Domains/comments/entities/CreateComment');
+const CreateComment = require('../../Domains/comments/entities/CreateComment');
 
 class CommentUseCase {
   constructor({commentRepository, threadRepository}) {
@@ -10,14 +10,26 @@ class CommentUseCase {
 
     await this._threadRepository.checkExistingThread(threadId);
 
-    const newComment = new NewComment(useCasePayload);
+    const createComment = new CreateComment(useCasePayload);
 
     return this._commentRepository.addComment(
-      newComment,
+      createComment,
       threadId,
       userIdFromAccessToken,
     );
   };
+  async deleteComment(useCaseParam, userIdFromAccessToken) {
+    const { threadId, commentId } = useCaseParam;
+
+    await this._threadRepository.checkExistingThread(threadId);
+    await this._commentRepository.checkExistingComment(commentId);
+    await this._commentRepository.checkCommentOwner(
+      commentId,
+      userIdFromAccessToken,
+    );
+
+    return this._commentRepository.deleteCommentById(commentId);
+  }
 }
 
 module.exports = CommentUseCase;

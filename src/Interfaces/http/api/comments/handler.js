@@ -5,31 +5,50 @@ class CommentsHandler {
     this._container = container;
 
     this.postCommentHandler = this.postCommentHandler.bind(this);
+    this.deleteCommentHandler = this.deleteCommentHandler.bind(this);
   }
 
   async postCommentHandler(request, h) {
-      const { id } = request.auth.credentials;
+    const { id } = request.auth.credentials;
 
-      const commentUseCase = this._container.getInstance(
-        CommentUseCase.name,
-      );
-  
-      const addedComment = await commentUseCase.addComment(
-        request.params,
-        request.payload,
-        id,
-      );
-  
-      const response = h.response({
-        status: 'success',
-        data: {
-          addedComment,
-        },
-      });
-  
-      response.code(201);
-  
-      return response;
+    const commentUseCase = this._container.getInstance(
+      CommentUseCase.name,
+    );
+
+    const addedComment = await commentUseCase.addComment(
+      request.params,
+      request.payload,
+      id,
+    );
+
+    const response = h.response({
+      status: 'success',
+      data: {
+        addedComment,
+      },
+    });
+
+    response.code(201);
+
+    return response;
+  }
+
+  async deleteCommentHandler(request, h) {
+    const { id } = request.auth.credentials;
+
+    const commentUseCase = this._container.getInstance(
+      CommentUseCase.name,
+    );
+
+    await commentUseCase.deleteComment(request.params, id);
+
+    const response = h.response({
+      status: 'success',
+    });
+
+    response.code(200);
+
+    return response;
   }
 }
 

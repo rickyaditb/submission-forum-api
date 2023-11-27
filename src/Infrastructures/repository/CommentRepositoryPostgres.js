@@ -12,8 +12,8 @@ class CommentRepositoryPostgres extends CommentRepository {
     this._idGenerator = idGenerator;
   }
 
-  async addComment(newComment, threadId, owner) {
-    const { content } = newComment;
+  async addComment(createComment, threadId, owner) {
+    const { content } = createComment;
     const id = `comment-${this._idGenerator()}`;
 
     const query = {
@@ -38,6 +38,42 @@ class CommentRepositoryPostgres extends CommentRepository {
     const result = await this._pool.query(query);
 
     return result.rows;
+  }
+  async checkCommentOwner(id, owner) {
+    const query = {
+      text: 'SELECT id, owner FROM comments WHERE id = $1',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (result.rows[0].owner !== owner) {
+      throw new AuthorizationError('Anda bukan user yang membuat komentar ini');
+    }
+  }
+  async checkExistingComment(id) {
+    const query = {
+      text: 'SELECT id FROM comments WHERE id = $1',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Komentar tidak ditemukan');
+    }
+  }
+  async deleteCommentById(id) {
+    const query = {
+      text: 'UPDATE comments SET is_deleted = true WHERE id = $1',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Komentar gagal dihapus. Id tidak ditemukan');
+    }
   }
 }
 
