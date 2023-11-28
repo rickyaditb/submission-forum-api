@@ -3,8 +3,6 @@ const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const CommentRepository = require('../../Domains/comments/CommentRepository');
 const AddedComment = require('../../Domains/comments/entities/AddedComment');
 
-const { mapCommentDbToModel } = require('../../Commons/utils');
-
 class CommentRepositoryPostgres extends CommentRepository {
   constructor(pool, idGenerator) {
     super();
@@ -17,17 +15,17 @@ class CommentRepositoryPostgres extends CommentRepository {
     const id = `comment-${this._idGenerator()}`;
 
     const query = {
-      text: 'INSERT INTO comments(id, thread_id, content, owner) VALUES($1, $2, $3, $4) RETURNING id, content, owner',
-      values: [id, threadId, content, owner],
+      text: 'INSERT INTO comments(id, thread_id, owner, content) VALUES($1, $2, $3, $4) RETURNING id, owner, content',
+      values: [id, threadId, owner, content],
     };
 
     const result = await this._pool.query(query);
 
-    return new AddedComment(result.rows.map(mapCommentDbToModel)[0]);
+    return new AddedComment(result.rows[0]);
   }
   async getCommentsByThreadId(threadId) {
     const query = {
-      text: `SELECT comments.id, comments.date, comments.content, comments.is_deleted, users.username
+      text: `SELECT comments.id, comments.content, comments.date, comments.is_deleted, users.username
       FROM comments
       INNER JOIN users ON comments.owner = users.id
       WHERE thread_id = $1
@@ -60,7 +58,7 @@ class CommentRepositoryPostgres extends CommentRepository {
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
-      throw new NotFoundError('Komentar tidak ditemukan');
+      throw new NotFoundError('Komentar tidak dapat ditemukan');
     }
   }
   async deleteCommentById(id) {
@@ -72,7 +70,7 @@ class CommentRepositoryPostgres extends CommentRepository {
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
-      throw new NotFoundError('Komentar gagal dihapus. Id tidak ditemukan');
+      throw new NotFoundError('Komentar tidak dapat dihapus, ID komentar tidak dapat ditemukan');
     }
   }
 }

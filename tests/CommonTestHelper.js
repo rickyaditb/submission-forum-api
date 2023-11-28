@@ -5,7 +5,7 @@ const UsersTableTestHelper = require('./UsersTableTestHelper');
 const AuthenticationsTableTestHelper = require('./AuthenticationsTableTestHelper');
 
 const CommonTestHelper = {
-  async getAccessToken({
+  async generateAccessToken({
     id = 'user-123',
     username = 'dicoding',
     password = 'secret',

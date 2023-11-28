@@ -21,13 +21,13 @@ describe('CommentRepositoryPostgres', () => {
   });
 
   describe('addComment function', () => {
-    it('should create new comment and return added comment correctly', async () => {
+    it('should create a new comment and return the added comment correctly', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});
 
       const createComment = new CreateComment({
-        content: 'sebuah komentar',
+        content: 'Content Comment',
       });
 
       const fakeIdGenerator = () => '123'; // stub!
@@ -51,7 +51,7 @@ describe('CommentRepositoryPostgres', () => {
       expect(addedComment).toStrictEqual(
         new AddedComment({
           id: `comment-${fakeIdGenerator()}`,
-          content: 'sebuah komentar',
+          content: 'Content Comment',
           owner: 'user-123',
         }),
       );
@@ -59,12 +59,12 @@ describe('CommentRepositoryPostgres', () => {
     });
   });
   describe('getCommentsByThreadId function', () => {
-    it('should return comments correctly', async () => {
+    it('should return the comments correctly', async () => {
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});
       await CommentsTableTestHelper.addComment({});
-      await CommentsTableTestHelper.addComment({ id: 'comment-234' });
-      await CommentsTableTestHelper.addComment({ id: 'comment-345' });
+      await CommentsTableTestHelper.addComment({ id: 'comment-456' });
+      await CommentsTableTestHelper.addComment({ id: 'comment-789' });
 
       const commentRepositoryPostgres = new CommentRepositoryPostgres(
         pool,
@@ -96,7 +96,7 @@ describe('CommentRepositoryPostgres', () => {
       await expect(
         commentRepositoryPostgres.checkCommentOwner(
           'comment-123',
-          'user-xxx',
+          'user-ZXC',
         ),
       ).rejects.toThrowError(AuthorizationError);
     });
@@ -122,7 +122,7 @@ describe('CommentRepositoryPostgres', () => {
     });
   });
   describe('checkExistingComment method', () => {
-    it('should throw NotFoundError when the comment not found', async () => {
+    it('should throw NotFoundError when the comment is not found', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});
@@ -135,7 +135,7 @@ describe('CommentRepositoryPostgres', () => {
 
       // Action and Assert
       await expect(
-        commentRepositoryPostgres.checkExistingComment('comment-xxx'),
+        commentRepositoryPostgres.checkExistingComment('comment-ZXC'),
       ).rejects.toThrowError(NotFoundError);
     });
 
@@ -157,7 +157,7 @@ describe('CommentRepositoryPostgres', () => {
     });
   });
   describe('deleteCommentById function', () => {
-    it('should throw NotFoundError when the comment not found', async () => {
+    it('should throw NotFoundError when the comment is not found', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});
@@ -170,11 +170,11 @@ describe('CommentRepositoryPostgres', () => {
 
       // Action and Assert
       await expect(
-        commentRepositoryPostgres.deleteCommentById('comment-xxx'),
+        commentRepositoryPostgres.deleteCommentById('comment-ZXC'),
       ).rejects.toThrowError(NotFoundError);
     });
 
-    it('should delete comment correctly', async () => {
+    it('should delete the comment correctly', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});

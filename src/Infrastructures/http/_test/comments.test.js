@@ -19,13 +19,13 @@ describe('/threads/{threadId}/comments endpoint', () => {
   });
 
   describe('when POST /threads/{threadId}/comments', () => {
-    it('should response 201 and persisted addedComment', async () => {
+    it('should response 201 and persisted the comments', async () => {
       // Arrange
       const requestPayload = {
-        content: 'sebuah komentar',
+        content: 'Content Comment',
       };
 
-      const accessToken = await CommonTestHelper.getAccessToken({});
+      const accessToken = await CommonTestHelper.generateAccessToken({});
 
       await ThreadsTableTestHelper.addThread({});
 
@@ -50,11 +50,11 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(responseJson.data.addedComment.owner).toEqual('user-123');
     });
 
-    it('should response 400 when request payload did not contain needed property', async () => {
+    it('should response 400 when request payload didnt contain needed property', async () => {
       // Arrange
       const requestPayload = {};
 
-      const accessToken = await CommonTestHelper.getAccessToken({});
+      const accessToken = await CommonTestHelper.generateAccessToken({});
 
       await ThreadsTableTestHelper.addThread({});
 
@@ -78,13 +78,13 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(responseJson.message).toBeDefined();
     });
 
-    it('should response 400 when request payload did not meet data type spesification', async () => {
+    it('should response 400 when request payload didnt meet data type spesification', async () => {
       // Arrange
       const requestPayload = {
         content: {},
       };
 
-      const accessToken = await CommonTestHelper.getAccessToken({});
+      const accessToken = await CommonTestHelper.generateAccessToken({});
 
       await ThreadsTableTestHelper.addThread({});
 
@@ -108,13 +108,13 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(responseJson.message).toBeDefined();
     });
 
-    it('should response 401 when request payload did not contain auth', async () => {
+    it('should response 401 when request payload didnt contain auth', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});
 
       const requestPayload = {
-        content: 'sebuah komentar',
+        content: 'Content Comment',
       };
 
       const server = await createServer(container);
@@ -135,9 +135,9 @@ describe('/threads/{threadId}/comments endpoint', () => {
   });
 
   describe('when DELETE /threads/{threadId}/comments/{commentId}', () => {
-    it('should reponse 200 and deleted addedComment', async () => {
+    it('should reponse 200 and deleted the comments', async () => {
       // Arrange
-      const accessToken = await CommonTestHelper.getAccessToken({});
+      const accessToken = await CommonTestHelper.generateAccessToken({});
 
       await ThreadsTableTestHelper.addThread({});
       await CommentsTableTestHelper.addComment({});
@@ -160,9 +160,9 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(responseJson.status).toEqual('success');
     });
 
-    it('should response 404 when comment not found', async () => {
+    it('should response 404 when the comment not found', async () => {
       // Arrange
-      const accessToken = await CommonTestHelper.getAccessToken({});
+      const accessToken = await CommonTestHelper.generateAccessToken({});
 
       await ThreadsTableTestHelper.addThread({});
       await CommentsTableTestHelper.addComment({});
@@ -172,7 +172,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
       // Action
       const response = await server.inject({
         method: 'DELETE',
-        url: '/threads/thread-123/comments/comment-xxx',
+        url: '/threads/thread-123/comments/comment-ZXC',
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -186,7 +186,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(responseJson.message).toBeDefined();
     });
 
-    it('should response 401 when request payload did not contain auth', async () => {
+    it('should response 401 when request payload didnt contain auth', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});

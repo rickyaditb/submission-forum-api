@@ -20,14 +20,14 @@ describe('/threads endpoint', () => {
   });
 
   describe('when POST /threads', () => {
-    it('should response 201 and persisted addedThread', async () => {
+    it('should response 201 and persisted the thread', async () => {
       // Arrange
       const requestPayload = {
         title: 'Judul Thread',
         body: 'Body Thread',
       };
 
-      const accessToken = await CommonTestHelper.getAccessToken({});
+      const accessToken = await CommonTestHelper.generateAccessToken({});
       const server = await createServer(container);
 
       // Action
@@ -48,13 +48,13 @@ describe('/threads endpoint', () => {
       expect(responseJson.data.addedThread).toBeDefined();
       expect(responseJson.data.addedThread.owner).toEqual('user-123');
     });
-    it('should response 400 when request payload did not contain needed property', async () => {
+    it('should response 400 when request payload didnt contain needed property', async () => {
       // Arrange
       const requestPayload = {
-        title: 'sebuah thread',
+        title: 'Judul Thread',
       };
 
-      const accessToken = await CommonTestHelper.getAccessToken({});
+      const accessToken = await CommonTestHelper.generateAccessToken({});
       const server = await createServer(container);
 
       // Action
@@ -75,14 +75,14 @@ describe('/threads endpoint', () => {
       expect(responseJson.message).toBeDefined();
     });
 
-    it('should response 400 when payload did not meet data type spesification', async () => {
+    it('should response 400 when payload didnt meet data type spesification', async () => {
       // Arrange
       const requestPayload = {
         title: {},
-        body: 'sebuah body thread',
+        body: 'Body Thread',
       };
 
-      const accessToken = await CommonTestHelper.getAccessToken({});
+      const accessToken = await CommonTestHelper.generateAccessToken({});
       const server = await createServer(container);
 
       // Action
@@ -103,11 +103,11 @@ describe('/threads endpoint', () => {
       expect(responseJson.message).toBeDefined();
     });
 
-    it('should response 401 when request payload did not contain auth', async () => {
+    it('should response 401 when request payload didnt contain auth', async () => {
       // Arrange
       const requestPayload = {
-        title: 'sebuah thread',
-        body: 'sebuah body thread',
+        title: 'Judul Thread',
+        body: 'Body thread',
       };
 
       const server = await createServer(container);
@@ -128,7 +128,7 @@ describe('/threads endpoint', () => {
   });
 
   describe('when GET /threads/{threadId}', () => {
-    it('should response 200 and persisted detailThread', async () => {
+    it('should response 200 and return the detail of the threads', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});
@@ -161,7 +161,7 @@ describe('/threads endpoint', () => {
       // Action
       const response = await server.inject({
         method: 'GET',
-        url: '/threads/thread-xxx',
+        url: '/threads/thread-ZXC',
       });
 
       // Assert

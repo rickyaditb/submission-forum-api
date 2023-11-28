@@ -14,8 +14,8 @@ class LoginUserUseCase {
     this._passwordHash = passwordHash;
   }
 
-  async execute(useCasePayload) {
-    const { username, password } = new UserLogin(useCasePayload);
+  async execute(reqPayload) {
+    const { username, password } = new UserLogin(reqPayload);
 
     const encryptedPassword = await this._userRepository.getPasswordByUsername(username);
 

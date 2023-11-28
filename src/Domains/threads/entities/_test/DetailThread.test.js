@@ -3,7 +3,7 @@ const DetailThread = require('../DetailThread');
 describe('DetailThread entities', () => {
   it('should throw an error when payload not contain needed properties', () => {
     // Arrange
-    const payload = { // missing 'id, date, username, comments'
+    const payload = { // 
       title: 'Judul Thread',
       body: 'Body Thread',
     }
@@ -13,7 +13,7 @@ describe('DetailThread entities', () => {
   })
   it('should throw an error when payload not meet data type specification', () => {
     // Arrange
-    const payload = { // all should be string except the comments should be object
+    const payload = { 
       id: 123,
       title: 'Judul Thread',
       body: {},
@@ -27,11 +27,13 @@ describe('DetailThread entities', () => {
   })
   it('should create DetailThread object correctly', () => {
     // Arrange
+    const timestamp = new Date().toISOString();
+
     const payload = {
       id: 'thread-123',
       title: 'Judul Thread',
       body: 'Body Thread',
-      date: '2023',
+      date: timestamp,
       username: 'rickyaditya',
       comments: [{}],
     }

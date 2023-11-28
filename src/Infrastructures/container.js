@@ -9,26 +9,35 @@ const Jwt = require('@hapi/jwt');
 const pool = require('./database/postgres/pool');
 
 // service (repository, helper, manager, etc)
-const AuthenticationTokenManager = require('../Applications/security/AuthenticationTokenManager');
-const PasswordHash = require('../Applications/security/PasswordHash');
+////* User Related Service *////
 const UserRepository = require('../Domains/users/UserRepository');
 const UserRepositoryPostgres = require('./repository/UserRepositoryPostgres');
+////* Auth Related Service *////
 const AuthenticationRepository = require('../Domains/authentications/AuthenticationRepository');
 const AuthenticationRepositoryPostgres = require('./repository/AuthenticationRepositoryPostgres');
-const ThreadRepository = require('../Domains/threads/ThreadRepository');
-const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres');
-const CommentRepository = require('../Domains/comments/CommentRepository');
-const CommentRepositoryPostgres = require('./repository/CommentRepositoryPostgres');
+const AuthenticationTokenManager = require('../Applications/security/AuthenticationTokenManager');
+const PasswordHash = require('../Applications/security/PasswordHash');
 const BcryptPasswordHash = require('./security/BcryptPasswordHash');
 const JwtTokenManager = require('./security/JwtTokenManager');
+////* Thread Related Service *////
+const ThreadRepository = require('../Domains/threads/ThreadRepository');
+const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres');
+////* Comment Related Service *////
+const CommentRepository = require('../Domains/comments/CommentRepository');
+const CommentRepositoryPostgres = require('./repository/CommentRepositoryPostgres');
 
 // use case
+////* User & Auth Related Use Case *////
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase');
 const LoginUserUseCase = require('../Applications/use_case/LoginUserUseCase');
-const LogoutUserUseCase = require('../Applications/use_case/LogoutUserUseCase');
 const RefreshAuthenticationUseCase = require('../Applications/use_case/RefreshAuthenticationUseCase');
-const ThreadUseCase = require('../Applications/use_case/ThreadUseCase');
-const CommentUseCase = require('../Applications/use_case/CommentUseCase');
+const LogoutUserUseCase = require('../Applications/use_case/LogoutUserUseCase');
+////* Thread Related Use Case *////
+const AddThreadUseCase = require('../Applications/use_case/AddThreadUseCase');
+const GetThreadUseCase = require('../Applications/use_case/GetThreadUseCase');
+////* Comment Related Use Case *////
+const AddCommentUseCase = require('../Applications/use_case/AddCommentUseCase');
+const DeleteCommentUseCase = require('../Applications/use_case/DeleteCommentUseCase');
 
 // creating container
 const container = createContainer();
@@ -187,8 +196,21 @@ container.register([
     },
   },
   {
-    key: ThreadUseCase.name,
-    Class: ThreadUseCase,
+    key: AddThreadUseCase.name,
+    Class: AddThreadUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: GetThreadUseCase.name,
+    Class: GetThreadUseCase,
     parameter: {
       injectType: 'destructuring',
       dependencies: [
@@ -204,25 +226,25 @@ container.register([
     },
   },
   {
-    key: ThreadUseCase.name,
-    Class: ThreadUseCase,
+    key: AddCommentUseCase.name,
+    Class: AddCommentUseCase,
     parameter: {
       injectType: 'destructuring',
       dependencies: [
         {
-          name: 'threadRepository',
-          internal: ThreadRepository.name,
-        },
-        {
           name: 'commentRepository',
           internal: CommentRepository.name,
+        },
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
         },
       ],
     },
   },
   {
-    key: CommentUseCase.name,
-    Class: CommentUseCase,
+    key: DeleteCommentUseCase.name,
+    Class: DeleteCommentUseCase,
     parameter: {
       injectType: 'destructuring',
       dependencies: [

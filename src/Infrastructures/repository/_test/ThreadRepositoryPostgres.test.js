@@ -21,7 +21,7 @@ describe('ThreadRepositoryPostgres', () => {
   });
 
   describe('addThread function', () => {
-    it('should create new thread and return added user correctly', async () => {
+    it('should create a new thread and return the added thread correctly', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({}); 
 
@@ -57,7 +57,7 @@ describe('ThreadRepositoryPostgres', () => {
     });
   });
   describe('checkExistingThread function', () => {
-    it('should throw NotFoundError when thread not found', async () => {
+    it('should throw NotFoundError when the thread is not found', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});
@@ -66,7 +66,7 @@ describe('ThreadRepositoryPostgres', () => {
 
       // Action and Assert
       await expect(
-        threadRepositoryPostgres.checkExistingThread('thread-xxx'),
+        threadRepositoryPostgres.checkExistingThread('thread-ZXC'),
       ).rejects.toThrowError(NotFoundError);
     });
 
@@ -82,7 +82,7 @@ describe('ThreadRepositoryPostgres', () => {
     });
   });
   describe('getThreadById function', () => {
-    it('should throw NotFoundError when thread not found', async () => {
+    it('should throw NotFoundError when the thread is not found', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});
@@ -91,11 +91,11 @@ describe('ThreadRepositoryPostgres', () => {
 
       // Action and Assert
       await expect(
-        threadRepositoryPostgres.getThreadById('thread-xxx'),
+        threadRepositoryPostgres.getThreadById('thread-ZXC'),
       ).rejects.toThrowError(NotFoundError);
     });
 
-    it('should return detail thread correctly', async () => {
+    it('should return the detail of the thread correctly', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
       await ThreadsTableTestHelper.addThread({});

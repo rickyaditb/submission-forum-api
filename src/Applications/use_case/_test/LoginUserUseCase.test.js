@@ -8,7 +8,7 @@ const NewAuth = require('../../../Domains/authentications/entities/NewAuth');
 describe('GetAuthenticationUseCase', () => {
   it('should orchestrating the get authentication action correctly', async () => {
     // Arrange
-    const useCasePayload = {
+    const reqPayload = {
       username: 'dicoding',
       password: 'secret',
     };
@@ -44,7 +44,7 @@ describe('GetAuthenticationUseCase', () => {
     });
 
     // Action
-    const actualAuthentication = await loginUserUseCase.execute(useCasePayload);
+    const actualAuthentication = await loginUserUseCase.execute(reqPayload);
 
     // Assert
     expect(actualAuthentication).toEqual(new NewAuth({

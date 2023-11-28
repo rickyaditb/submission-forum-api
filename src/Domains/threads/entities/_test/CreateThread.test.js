@@ -3,7 +3,7 @@ const CreateThread = require('../CreateThread');
 describe('CreateThread entities', () => {
   it('should throw an error when payload not contain needed properties', () => {
     // Arrange
-    const payload = { // missing 'body'
+    const payload = { 
       title: "Judul Thread",
     }
 
@@ -12,7 +12,7 @@ describe('CreateThread entities', () => {
   })
   it('should throw an error when payload not meet data type specification', () => {
     // Arrange
-    const payload = { // should be string
+    const payload = {
       title: 69420,
       body: true,
     }

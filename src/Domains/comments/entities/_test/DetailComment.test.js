@@ -4,7 +4,7 @@ describe('DetailComment entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     const payload = {
       username: 'dicoding',
-      content: 'sebuah comment',
+      content: 'Content Comment',
     };
 
     // Action and Assert
@@ -18,7 +18,7 @@ describe('DetailComment entities', () => {
     const payload = {
       id: 123,
       username: {},
-      date: 2022,
+      date: 2023,
       content: {},
       is_deleted: false,
     };
@@ -31,11 +31,13 @@ describe('DetailComment entities', () => {
 
   it('should create detailComment object correctly', () => {
     // Arrange
+    const timestamp = new Date().toISOString();
+    
     const payload = {
       id: 'comment-123',
       username: 'dicoding',
-      date: '2022-04-14T00:41:09.775Z',
-      content: 'sebuah comment',
+      date: timestamp,
+      content: 'Content Comment',
       is_deleted: false,
     };
 

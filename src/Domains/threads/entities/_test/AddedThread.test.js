@@ -3,7 +3,7 @@ const AddedThread = require('../AddedThread');
 describe('AddedThread entities', () => {
   it('should throw an error when payload not contain needed properties', () => {
     // Arrange
-    const payload = { // missing 'owner'
+    const payload = {
       id: 'thread-123',
       title: "Judul Thread",
     }
@@ -13,7 +13,7 @@ describe('AddedThread entities', () => {
   })
   it('should throw an error when payload not meet data type specification', () => {
     // Arrange
-    const payload = { // should be string
+    const payload = {
       id: 123,
       title: {},
       owner: "valid-property"

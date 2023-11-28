@@ -6,7 +6,7 @@ const CommentsTableTestHelper = {
     id = 'comment-123',
     threadId = 'thread-123',
     owner = 'user-123',
-    content = 'sebuah komentar',
+    content = 'Content Comment',
   }) {
     const query = {
       text: 'INSERT INTO comments(id, thread_id, owner, content) VALUES($1, $2, $3, $4)',
