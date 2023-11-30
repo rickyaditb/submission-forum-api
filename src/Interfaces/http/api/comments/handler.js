@@ -9,16 +9,16 @@ class CommentsHandler {
     this.deleteCommentHandler = this.deleteCommentHandler.bind(this);
   }
 
-  async postCommentHandler(request, h) {
-    const { id } = request.auth.credentials;
+  async postCommentHandler({auth, params, payload}, h) {
+    const { id } = auth.credentials;
 
     const addCommentUseCase = this._container.getInstance(
       AddCommentUseCase.name,
     );
 
     const addedComment = await addCommentUseCase.execute(
-      request.params,
-      request.payload,
+      params,
+      payload,
       id,
     );
 
@@ -34,14 +34,14 @@ class CommentsHandler {
     return response;
   }
 
-  async deleteCommentHandler(request, h) {
-    const { id } = request.auth.credentials;
+  async deleteCommentHandler({auth, params}, h) {
+    const { id } = auth.credentials;
 
     const deleteCommentUseCase = this._container.getInstance(
       DeleteCommentUseCase.name,
     );
 
-    await deleteCommentUseCase.execute(request.params, id);
+    await deleteCommentUseCase.execute(params, id);
 
     const response = h.response({
       status: 'success',

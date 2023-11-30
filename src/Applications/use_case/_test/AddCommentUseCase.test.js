@@ -19,7 +19,7 @@ describe('AddCommentUseCase', () => {
       content: 'Content Comment',
     };
 
-    const mockAddedComment = new AddedComment({
+    const expectedComment = new AddedComment({
       id: 'comment-123',
       content: reqPayload.content,
       owner: reqUserId,
@@ -53,7 +53,7 @@ describe('AddCommentUseCase', () => {
     );
 
     // Assert
-    expect(addedComment).toStrictEqual(mockAddedComment);
+    expect(addedComment).toStrictEqual(expectedComment);
     expect(mockThreadRepository.checkExistingThread).toBeCalledWith(
       reqParams.threadId,
     );

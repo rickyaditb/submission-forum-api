@@ -1,5 +1,4 @@
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres');
-const CommentRepository = require('../../../Domains/comments/CommentRepository');
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
@@ -45,7 +44,7 @@ describe('CommentRepositoryPostgres', () => {
 
       // Assert
       const comment = await CommentsTableTestHelper.findCommentById(
-        'comment-123',
+        addedComment.id,
       );
 
       expect(addedComment).toStrictEqual(
@@ -152,7 +151,7 @@ describe('CommentRepositoryPostgres', () => {
 
       // Action and Assert
       await expect(
-        commentRepositoryPostgres.checkExistingComment('comment-123'),
+        commentRepositoryPostgres.checkExistingComment('comment-123', 'thread-123'),
       ).resolves.not.toThrowError();
     });
   });

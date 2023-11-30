@@ -9,12 +9,12 @@ class ThreadsHandler {
     this.getThreadHandler = this.getThreadHandler.bind(this);
   }
 
-  async postThreadHandler(request, h) {
-    const { id } = request.auth.credentials;
+  async postThreadHandler({auth, payload}, h) {
+    const { id } = auth.credentials;
 
     const addThreadUseCase = this._container.getInstance(AddThreadUseCase.name);
 
-    const addedThread = await addThreadUseCase.execute(request.payload, id);
+    const addedThread = await addThreadUseCase.execute(payload, id);
 
     const response = h.response({
       status: 'success',
@@ -26,8 +26,8 @@ class ThreadsHandler {
     response.code(201);
     return response;
   }
-  async getThreadHandler(request, h) {
-    const { threadId: id } = request.params;
+  async getThreadHandler({params}, h) {
+    const { threadId: id } = params;
 
     const reqParams = { threadId: id };
 

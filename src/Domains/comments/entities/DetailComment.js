@@ -9,6 +9,7 @@ class DetailComment {
     this.is_deleted = payload.is_deleted;
   }
   _verifyPayload({ id, username, date, content, is_deleted }) {
+    // Yang ini tidak saya revisi menjadi '!is_deleted' karena jika value is_deleted adalah false, maka error akan dibangkitkan (false positive error)
     if (!id || !username || !date || !content || is_deleted === undefined) {
       throw new Error('DETAIL_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
     }

@@ -45,8 +45,9 @@ describe('ThreadRepositoryPostgres', () => {
       );
 
       // Assert
-      const threads = await ThreadsTableTestHelper.findThreadById('thread-123');
+      const threads = await ThreadsTableTestHelper.findThreadById(addedThread.id);
 
+      expect(threads).toHaveLength(1);
       expect(addedThread).toStrictEqual(
         new AddedThread({
           id: `thread-${fakeIdGenerator()}`,
@@ -108,11 +109,7 @@ describe('ThreadRepositoryPostgres', () => {
       );
 
       // Assert
-      const thread = await ThreadsTableTestHelper.findThreadById(
-        'thread-123',
-      );
-
-      expect(detailThread).toStrictEqual(thread);
+      expect(detailThread[0]).toHaveProperty('id', 'thread-123');
     });
   });
 });

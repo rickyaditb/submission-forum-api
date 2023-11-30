@@ -49,10 +49,10 @@ class CommentRepositoryPostgres extends CommentRepository {
       throw new AuthorizationError('Anda bukan user yang membuat komentar ini');
     }
   }
-  async checkExistingComment(id) {
+  async checkExistingComment(commentId, threadId) {
     const query = {
-      text: 'SELECT id FROM comments WHERE id = $1',
-      values: [id],
+      text: 'SELECT id FROM comments WHERE id = $1 AND thread_id = $2',
+      values: [commentId, threadId],
     };
 
     const result = await this._pool.query(query);

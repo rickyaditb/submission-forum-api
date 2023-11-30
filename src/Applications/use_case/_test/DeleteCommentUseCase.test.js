@@ -1,5 +1,4 @@
 const CommentRepository = require('../../../Domains/comments/CommentRepository');
-const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
 
 const DeleteCommentUseCase = require('../DeleteCommentUseCase');
 
@@ -13,24 +12,17 @@ describe('DeleteCommentUseCase', () => {
       commentId: 'comment-123',
     };
 
-    const expectedStatus = {
-      status: 'success',
-    };
-
     /** orchestrating dependency of use case */
     const mockCommentRepository = new CommentRepository();
-    const mockThreadRepository = new ThreadRepository();
 
     /** mocking needed function */
-    mockThreadRepository.checkExistingThread = jest.fn(() => Promise.resolve(reqParams.threadId));
-    mockCommentRepository.checkExistingComment = jest.fn(() => Promise.resolve(reqParams.commentId));
-    mockCommentRepository.checkCommentOwner = jest.fn(() => Promise.resolve(reqParams.commentId, reqUserId));
-    mockCommentRepository.deleteCommentById = jest.fn(() => Promise.resolve({ status: 'success' }));
+    mockCommentRepository.checkExistingComment = jest.fn(() => Promise.resolve());
+    mockCommentRepository.checkCommentOwner = jest.fn(() => Promise.resolve());
+    mockCommentRepository.deleteCommentById = jest.fn(() => Promise.resolve());
 
     /** creating use case instance */
     const deleteCommentUseCase = new DeleteCommentUseCase({
       commentRepository: mockCommentRepository,
-      threadRepository: mockThreadRepository,
     });
 
     // Action
@@ -40,12 +32,8 @@ describe('DeleteCommentUseCase', () => {
     );
 
     // Assert
-    expect(deletedComment).toStrictEqual(expectedStatus);
-    expect(mockThreadRepository.checkExistingThread).toBeCalledWith(
-      reqParams.threadId,
-    );
     expect(mockCommentRepository.checkExistingComment).toBeCalledWith(
-      reqParams.commentId,
+      reqParams.commentId, reqParams.threadId,
     );
     expect(mockCommentRepository.checkCommentOwner).toBeCalledWith(
       reqParams.commentId,

@@ -16,7 +16,7 @@ describe('AddThreadUseCase', () => {
 
     const reqUserId = 'user-123';
 
-    const mockAddedThread = new AddedThread({
+    const expectedThread = new AddedThread({
       id: 'thread-123',
       title: reqPayload.title,
       owner: reqUserId,
@@ -48,7 +48,7 @@ describe('AddThreadUseCase', () => {
     );
 
     // Assert
-    expect(addedThread).toStrictEqual(mockAddedThread);
+    expect(addedThread).toStrictEqual(expectedThread);
     expect(mockThreadRepository.addThread).toBeCalledWith(
       new CreateThread(reqPayload),
       reqUserId,

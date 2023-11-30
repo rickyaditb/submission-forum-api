@@ -15,7 +15,7 @@ describe('GetThreadUseCase', () => {
 
     const timestamp = new Date().toISOString();
 
-    const mockThread = [
+    const thread = [
       new DetailThread({
         id: 'thread-123',
         title: 'Judul Thread',
@@ -26,7 +26,7 @@ describe('GetThreadUseCase', () => {
       }),
     ];
 
-    const mockComments = [
+    const comments = [
       new DetailComment({
         id: 'comment-123',
         username: 'userA',
@@ -43,37 +43,37 @@ describe('GetThreadUseCase', () => {
       }),
     ];
 
-    const mockDetailComments = [
+    const DetailComments = [
       {
-        ...mockComments[0],
-        content: mockComments[0].is_deleted
+        ...comments[0],
+        content: comments[0].is_deleted
           ? '**komentar telah dihapus**'
-          : mockComments[0].content,
+          : comments[0].content,
       },
       {
-        ...mockComments[1],
-        content: mockComments[1].is_deleted
+        ...comments[1],
+        content: comments[1].is_deleted
           ? '**komentar telah dihapus**'
-          : mockComments[1].content,
+          : comments[1].content,
       },
     ];
 
-    const cleanDetailCommentA = Object.keys(mockDetailComments[0])
+    const cleanDetailCommentA = Object.keys(DetailComments[0])
       .filter(key => key !== 'is_deleted')
       .reduce((acc, key) => {
-        acc[key] = mockDetailComments[0][key];
+        acc[key] = DetailComments[0][key];
         return acc;
       }, {});
 
-    const cleanDetailCommentB = Object.keys(mockDetailComments[1])
+    const cleanDetailCommentB = Object.keys(DetailComments[1])
       .filter(key => key !== 'is_deleted')
       .reduce((acc, key) => {
-        acc[key] = mockDetailComments[1][key];
+        acc[key] = DetailComments[1][key];
         return acc;
       }, {});
 
-    const mockDetailThread = {
-      ...mockThread[0],
+    const expectedDetailThread = {
+      ...thread[0],
       comments: [
         { ...cleanDetailCommentA },
         { ...cleanDetailCommentB },
@@ -83,8 +83,8 @@ describe('GetThreadUseCase', () => {
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
 
-    mockThreadRepository.getThreadById = jest.fn(() => Promise.resolve(mockThread));
-    mockCommentRepository.getCommentsByThreadId = jest.fn(() => Promise.resolve(mockDetailComments));
+    mockThreadRepository.getThreadById = jest.fn(() => Promise.resolve(thread));
+    mockCommentRepository.getCommentsByThreadId = jest.fn(() => Promise.resolve(DetailComments));
 
     const getThreadUseCase = new GetThreadUseCase({
       threadRepository: mockThreadRepository,
@@ -95,7 +95,7 @@ describe('GetThreadUseCase', () => {
     const useCaseResult = await getThreadUseCase.execute(reqParams);
 
     // Assert
-    expect(useCaseResult).toStrictEqual(mockDetailThread);
+    expect(useCaseResult).toStrictEqual(expectedDetailThread);
     expect(mockThreadRepository.getThreadById).toBeCalledWith(
       reqParams.threadId,
     );
